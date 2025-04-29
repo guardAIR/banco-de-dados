@@ -89,53 +89,53 @@ CREATE TABLE alerta (
     data_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
     nivel_alerta VARCHAR(7) NOT NULL,
     mensagem_alerta VARCHAR(200),
-    fkSensor INT NOT NULL,
+    fkLeituraSensor INT NOT NULL,
     CONSTRAINT chk_nivel_alerta CHECK (nivel_alerta IN ('baixo', 'medio', 'alto', 'critico'))
 );
 
 ALTER TABLE empresa
 ADD CONSTRAINT fk_endereco_empresa
-FOREIGN KEY (fkEndereco) REFERENCES Endereco(id);
+FOREIGN KEY (fkEndereco) REFERENCES endereco(id);
 
 ALTER TABLE empresa
 ADD CONSTRAINT fk_matriz_empresa
-FOREIGN KEY (fkEmpresaMatriz) REFERENCES Empresa(id);
+FOREIGN KEY (fkEmpresaMatriz) REFERENCES empresa(id);
 
 ALTER TABLE contatoEmpresa
 ADD CONSTRAINT fk_empresa_contato
-FOREIGN KEY (fkEmpresa) REFERENCES Empresa(id);
+FOREIGN KEY (fkEmpresa) REFERENCES empresa(id);
 
 ALTER TABLE usuario
 ADD CONSTRAINT fk_empresa_usuario
-FOREIGN KEY (fkEmpresa) REFERENCES Empresa(id);
+FOREIGN KEY (fkEmpresa) REFERENCES empresa(id);
 
 ALTER TABLE usuario
 ADD CONSTRAINT fk_cargo_usuario
-FOREIGN KEY (fkCargo) REFERENCES Cargo(id);
+FOREIGN KEY (fkCargo) REFERENCES cargo(id);
 
 ALTER TABLE usuario
 ADD CONSTRAINT fk_endereco_usuario
-FOREIGN KEY (fkEndereco) REFERENCES Endereco(id);
+FOREIGN KEY (fkEndereco) REFERENCES endereco(id);
 
 ALTER TABLE credenciais
 ADD CONSTRAINT fk_usuario_credenciais
-FOREIGN KEY (fkUsuario) REFERENCES Usuario(id);
+FOREIGN KEY (fkUsuario) REFERENCES usuario(id);
 
 ALTER TABLE areas
 ADD CONSTRAINT fk_empresa_area
-FOREIGN KEY (fkEmpresa) REFERENCES Empresa(id);
+FOREIGN KEY (fkEmpresa) REFERENCES empresa(id);
 
 ALTER TABLE sensor
 ADD CONSTRAINT fk_area_sensor
-FOREIGN KEY (fkAreas) REFERENCES Areas(id);
+FOREIGN KEY (fkAreas) REFERENCES areas(id);
 
 ALTER TABLE leituraSensor
 ADD CONSTRAINT fk_sensor_leituraSensor
-FOREIGN KEY (fkSensor) REFERENCES Sensor(id);
+FOREIGN KEY (fkSensor) REFERENCES sensor(id);
 
 ALTER TABLE alerta
-ADD CONSTRAINT fk_sensor_alerta
-FOREIGN KEY (fkSensor) REFERENCES Sensor(id);
+ADD CONSTRAINT fk_leituraSensor_alerta
+FOREIGN KEY (fkLeituraSensor) REFERENCES leituraSensor(id);
 
 DESC endereco;
 DESC empresa;
