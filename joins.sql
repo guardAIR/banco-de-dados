@@ -1,76 +1,84 @@
-SELECT
-    ls.data_hora AS DataHoraLeitura,
-    ls.concentracao_gas AS Concentracao,
-    s.localizacao AS LocalizacaoSensor,
-    a.nome_area AS NomeArea
-FROM
-    LeituraSensor ls
-INNER JOIN
-    sensor s ON ls.fkSensor = s.id
-INNER JOIN
-    areas a ON s.fkAreas = a.id;
-    
-    
-    
-SELECT
-    al.data_hora AS DataHoraAlerta,
-    al.nivel_alerta AS Nivel,
-    al.concentracao_gas AS ConcentracaoRegistrada,
-    al.mensagem_alerta AS Mensagem,
-    s.localizacao AS LocalizacaoSensor,
-    a.nome_area AS NomeArea,
-    e.nome AS NomeEmpresa
-FROM
-    alerta al
-INNER JOIN
-    sensor s ON al.fkSensor = s.id
-INNER JOIN
-    areas a ON s.fkAreas = a.id
-INNER JOIN
-    empresa e ON a.fkEmpresa = e.id;
-    
-    
-    
+use air_guard;
+
+CREATE VIEW vwUsuario AS
 SELECT
     u.nome AS NomeUsuario,
     u.sobrenome AS SobrenomeUsuario,
     u.email AS EmailUsuario,
-    c.nome_cargo AS Cargo,
-    e.nome AS NomeEmpresa
+    e.nome_fantasia AS NomeEmpresa
 FROM
     usuario u
 INNER JOIN
-    cargo c ON u.fkCargo = c.id
-INNER JOIN
-    empresa e ON u.fkEmpresa = e.id;
+    empresa e ON u.fkempresa = e.id;
     
-    
-SELECT
-    s.id AS ID_Sensor,
-    s.localizacao AS Localizacao,
-    a.nome_area AS Area,
-    e.nome AS Empresa
-FROM
-    sensor s
-INNER JOIN
-    areas a ON s.fkAreas = a.id
-INNER JOIN
-    empresa e ON a.fkEmpresa = e.id
-WHERE
-    s.status_sensor = 'ativo';
-    
+
+SELECT NomeUsuario, SobrenomeUsuario, EmailUsuario, NomeEmpresa FROM vwUsuario;
 
 
 SELECT
-    al.id AS ID_Alerta,
-    al.data_hora AS HoraAlerta,
-    al.nivel_alerta AS NivelAlerta,
-    s.localizacao AS LocalSensor,
-    ls.data_hora AS HoraLeituraProxima,
-    ls.concentracao_gas AS LeituraProxima
+    l.data_hora AS DataHoraLeitura,
+    l.concentracao_gas AS Concentracao,
+    s.id AS IDSensor,
+    a.nome AS NomeArea
 FROM
-    alerta al
+    leitura l
 INNER JOIN
-    sensor s ON al.fkSensor = s.id
-LEFT JOIN
-    leituraSensor ls ON al.fkSensor = ls.fkSensor;
+    sensor s ON l.fksensor = s.id
+INNER JOIN
+    area a ON s.fkarea = a.id;
+
+SELECT
+    a.id AS IDAlerta,
+    a.nivel_alerta AS Nivel,
+    a.mensagem AS Mensagem,
+    l.concentracao_gas AS ConcentracaoRegistrada,
+    s.id AS IDSensor,
+    ar.nome AS NomeArea,
+    e.nome_fantasia AS NomeEmpresa
+FROM
+    alerta a
+INNER JOIN
+    leitura l ON a.fkleitura = l.id
+INNER JOIN
+    sensor s ON l.fksensor = s.id
+INNER JOIN
+    area ar ON s.fkarea = ar.id
+INNER JOIN
+    empresa e ON ar.fkempresa = e.id;
+
+
+SELECT
+    a.id AS ID_Alerta,
+    l.data_hora AS HoraAlerta,
+    a.nivel_alerta AS NivelAlerta,
+    CONCAT('X:', s.eixo_x, ' Y:', s.eixo_y) AS LocalSensor,
+    l.data_hora AS HoraLeituraProxima,
+    l.concentracao_gas AS LeituraProxima
+FROM
+    alerta a
+INNER JOIN
+    leitura l ON a.fkleitura = l.id
+INNER JOIN
+    sensor s ON l.fksensor = s.id;
+
+CREATE VIEW vw_alerta AS
+SELECT
+	CASE
+		WHEN l.concentracao_gas < 25 THEN 'Cuidado: o nível de gás está se aproximando do limite estipulado.'
+		WHEN l.concentracao_gas < 30 THEN 'Cuidado: o nível de gás está consideravelmente alto.'
+		WHEN l.concentracao_gas < 39 THEN 'Cuidado: o nível de gás está no limite.'
+		ELSE 'ALERTA CRÍTICO: o nível de gás ultrapassou o limite seguro!'
+	END AS mensagem,
+	CASE
+		WHEN l.concentracao_gas < 25 THEN 'baixo'
+		WHEN l.concentracao_gas < 30 THEN 'médio'
+		WHEN l.concentracao_gas < 39 THEN 'alto'
+		ELSE 'crítico'
+	END AS nivel_alerta,
+	l.id AS fkleitura
+FROM leitura l
+LEFT JOIN alerta a ON l.id = a.fkleitura
+WHERE l.concentracao_gas > 20
+AND a.fkleitura IS NULL;
+
+select * from vw_alerta;
