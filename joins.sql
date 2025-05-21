@@ -8,9 +8,6 @@ INNER JOIN empresa e ON u.fkempresa = e.id;
 SELECT * from usuario;
 SELECT NomeUsuario, SobrenomeUsuario, EmailUsuario, dtCadastro, NomeEmpresa, SenhaUsuario FROM vwUsuario WHERE id = 1;
 
-SELECT email, nome, sobrenome, data_cadastro, id FROM usuario WHERE email = '${email}' AND senha = '${senha}';
-
-
 SELECT
     l.data_hora AS DataHoraLeitura,
     l.concentracao_gas AS Concentracao,
