@@ -13,31 +13,27 @@ CREATE DATABASE air_guard;
 USE air_guard;
 
 -- Criando as tabelas
-CREATE TABLE empresa
-(
+CREATE TABLE empresa (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
     cnpj VARCHAR(18),
     nome_fantasia VARCHAR(100),
     razao_social VARCHAR(150),
     foto_perfil VARCHAR(255),
-    data_cadastro DATE,
-    codigo_empresa VARCHAR(10),
-    fkmatriz INT
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    codigo_empresa VARCHAR(10)
 );
 
-CREATE TABLE usuario
-(
+CREATE TABLE usuario (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
     nome VARCHAR(50),
     sobrenome VARCHAR(100),
     email VARCHAR(100),
     senha VARCHAR(255),
-    data_cadastro DATE,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     fkempresa INT
 );
 
-CREATE TABLE endereco
-(
+CREATE TABLE endereco (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
     logradouro VARCHAR(100),
     cep VARCHAR(8),
@@ -49,50 +45,41 @@ CREATE TABLE endereco
     fkempresa INT
 );
 
-CREATE TABLE contato
-(
+CREATE TABLE contato (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
 	telefone VARCHAR(15),
     fkempresa INT
 );
 
-CREATE TABLE area
-(
+CREATE TABLE area (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
 	nome VARCHAR(50),
     foto_perfil VARCHAR(255),
     fkempresa INT
 );
 
-CREATE TABLE sensor
-(
+CREATE TABLE sensor (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
 	eixo_x INT,
     eixo_y INT,
     fkarea INT
 );
 
-CREATE TABLE alerta
-(
+CREATE TABLE alerta (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
-	mensagem VARCHAR(50),
-    nivel_alerta VARCHAR(50),
+	mensagem VARCHAR(255),
+    nivel_alerta VARCHAR(255),
     fkleitura INT
 );
 
-CREATE TABLE leitura
-(
+CREATE TABLE leitura (
 	id INT PRIMARY KEY NOT NULL UNIQUE AUTO_INCREMENT,
 	concentracao_gas FLOAT,
-    data_hora DATETIME,
+    data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
     fksensor INT
 );
 
 -- Fazendo os acertos das chaves estrangeiras
-ALTER TABLE empresa
-ADD CONSTRAINT foreign_key_empresa_matriz
-FOREIGN KEY(fkmatriz) REFERENCES empresa(id);
-
 ALTER TABLE usuario
 ADD CONSTRAINT foreign_key_empresa_usuario
 FOREIGN KEY(fkempresa) REFERENCES empresa(id);

@@ -1,18 +1,14 @@
 use air_guard;
 
 CREATE VIEW vwUsuario AS
-SELECT
-    u.nome AS NomeUsuario,
-    u.sobrenome AS SobrenomeUsuario,
-    u.email AS EmailUsuario,
-    e.nome_fantasia AS NomeEmpresa
-FROM
-    usuario u
-INNER JOIN
-    empresa e ON u.fkempresa = e.id;
-    
+SELECT u.id AS id, u.nome AS NomeUsuario, u.sobrenome AS SobrenomeUsuario, u.email AS EmailUsuario, u.senha AS SenhaUsuario, u.data_cadastro AS dtCadastro, e.nome_fantasia AS NomeEmpresa
+FROM usuario u
+INNER JOIN empresa e ON u.fkempresa = e.id;
 
-SELECT NomeUsuario, SobrenomeUsuario, EmailUsuario, NomeEmpresa FROM vwUsuario;
+SELECT * from usuario;
+SELECT NomeUsuario, SobrenomeUsuario, EmailUsuario, dtCadastro, NomeEmpresa, SenhaUsuario FROM vwUsuario WHERE id = 1;
+
+SELECT email, nome, sobrenome, data_cadastro, id FROM usuario WHERE email = '${email}' AND senha = '${senha}';
 
 
 SELECT
@@ -82,3 +78,12 @@ WHERE l.concentracao_gas > 20
 AND a.fkleitura IS NULL;
 
 select * from vw_alerta;
+
+CREATE VIEW vw_alertaLeitura AS
+	SELECT a.id as alertaId, a.mensagem as mensagem, a.nivel_alerta as nivel, l.id as leituraId, l.concentracao_gas as concentração
+    from alerta a
+	inner join leitura l on a.fkleitura = l.id;
+
+select * from vw_alertaLeitura;
+
+use air_guard;
