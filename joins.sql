@@ -1,7 +1,7 @@
 use air_guard;
 
 CREATE VIEW vwUsuario AS
-SELECT u.id AS id, u.nome AS NomeUsuario, u.sobrenome AS SobrenomeUsuario, u.email AS EmailUsuario, u.senha AS SenhaUsuario, u.data_cadastro AS dtCadastro, u.fkempresa AS idEmpresa, e.nome_fantasia AS NomeEmpresa
+SELECT u.id AS id, u.nome AS NomeUsuario, u.sobrenome AS SobrenomeUsuario, u.email AS EmailUsuario, u.senha AS SenhaUsuario, u.data_cadastro AS dtCadastro, u.fkempresa AS idEmpresa, e.nome_fantasia, isADM AS NomeEmpresa
 FROM usuario u
 INNER JOIN empresa e ON u.fkempresa = e.id;
 
