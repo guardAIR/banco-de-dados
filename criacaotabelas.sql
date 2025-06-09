@@ -30,6 +30,7 @@ CREATE TABLE usuario (
     email VARCHAR(100),
     senha VARCHAR(255),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    isADM boolean default false,
     fkempresa INT
 );
 
